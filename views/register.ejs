@@ -1,0 +1,38 @@
+<% include header.ejs %>
+
+<% include nav.ejs %>
+
+<div class="container formdiv">
+    <h1>Sign-up</h1>
+    <form action="/register" method="POST">
+
+  
+        <!-- <div class="row"> -->
+            <div class="col">
+                <div class="form-group">
+                    <label for="firstname">Username</label>
+                    <input type="text" name="username" id="username" class="form-control" placeholder="Username"
+                        maxlength="30" required>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label for="lastname">Password</label>
+                    <input type="password" name="password" id="password" class="form-control" placeholder="Password"
+                        maxlength="20" required>
+                </div>
+            </div>
+        <!-- </div> -->
+        
+        <div class="delete-form">
+            <a href="/" class="btn homebutton delete-button">Cancel</a>
+        </div>
+
+        <div class="delete-form">
+            <button class="btn homebutton delete-button" type="submit">Sign Up</button>
+        </div>
+    </form>
+</div>
+
+
+<% include footer.ejs %>

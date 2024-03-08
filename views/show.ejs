@@ -1,0 +1,47 @@
+<% include header.ejs %>
+<% include nav.ejs %>
+
+<div class="container formdiv">
+
+    <!-- <%= person %> -->
+    <!-- <%= currentUser%> -->
+    <img class="formdiv-img" src="/image/<%= person.filename %>" alt="" width="300px">
+    <hr>
+    <p>Firstname: <%= person.firstname %> </p>
+    <p>Lastname: <%= person.lastname %></p>
+    <p>Home Address: <%= person.address %></p>
+    <p>Age: <%= person.age %></p>
+    <p>Phone Number: <%= person.phone %></p>
+    <p>Location missing from: <%= person.location %></p>
+    <p>Missing From(Date): <%= person.date.toDateString() %></p>
+    <p>Gender: <%= person.gender %></p>
+    <p>Registered By: <%= person.username %></p>
+
+    <form action="/person/<%= person._id %>/edit" class="delete-form" method="get" >
+
+        <button class="btn homebutton delete-button" type="submit">Edit</button>
+
+    </form>
+    <!-- 
+<div class="delete-form">
+    <a href="/person/<%= person._id %>/edit"class="btn homebutton delete-button">Edit</a>
+</div> -->
+    <form action="/person/<%= person.files_id %>?_method=DELETE" class="delete-form" method="POST">
+        <button class="btn homebutton delete-button" type="submit">Delete</button>
+    </form>
+
+</div>
+<!-- <%= person.username %> -->
+<script>
+    function Validate() {        
+        if (!("<%=person.username%>" == "<%=currentUser.username%>")) {
+            alert("This person is not added by you!!");
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+</script>
+
+<% include footer.ejs %>

@@ -1,0 +1,33 @@
+  <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">First</th>
+                    <th scope="col">Last</th>
+                    <th scope="col">Age</th>
+                    <th scope="col">Missing From</th>
+                </tr>
+            </thead>
+            <tbody>
+               
+               
+               
+                   <% person.forEach(function(person){ %>
+                     <tr>
+                            <th scope="row"><img src="https://www.wikihow.com/images/6/61/Draw-a-Cartoon-Man-Step-15.jpg" width="100px"></th>
+                              <td><%=person.firstname%></td>
+                              <td><%=person.lastname%></td>
+                              <td><%=person.age%></td>
+                              <td><%=person.date%></td>
+                     
+                      </tr>
+                   
+                    <% }); %>
+                   
+                  
+               
+               
+                
+                
+            </tbody>
+        </table>

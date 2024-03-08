@@ -1,0 +1,65 @@
+<nav class="navbar navbar-b navbar-trans navbar-expand-md fixed-top" id="mainNav">
+    <div class="container">
+        <a class="navbar-brand js-scroll" href="/">Missing Child</a>
+        <button class="navbar-toggler collapsed" id="nav-button" type="button" data-toggle="collapse"
+            data-target="#navbarDefault" aria-controls="navbarDefault" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <div class="navbar-collapse collapse justify-content-end" id="navbarDefault">
+            <ul class="navbar-nav">
+                <% if(!currentUser){%>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll" href="/login">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll" href="/register">Sign Up</a>
+                    </li>
+                    <%}else{%>
+                        <li class="nav-item">
+                            <a class="nav-link js-scroll" href="/">
+                                <%=currentUser.username%>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link js-scroll" href="/logout">Logout</a>
+                        </li>
+                        <% }%>
+                            <!-- Report form in the navigation bar -->
+                            <li class="nav-item">
+                                <a class="nav-link js-scroll" href="/report">Write Report</a>
+                                <!-- nav.ejs -->
+                            </li>
+                            <!-- End of Report form -->
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Kelvin Ogachi
+  <%=success%>  
+  <%=error%>  
+       -->
+<% if (success && success.length>0) { %>
+    <div class="container alert-top">
+        <!-- <div class="alert alert-success" role="alert">    -->
+
+        <p class="intro-subtitle headertext alert-top-success">
+            <%=success%>
+        </p>
+    </div>
+    <!-- </div> -->
+    <% } %>
+
+        <% if (error && error.length>0) { %>
+            <div class="container alert-top">
+                <!-- <div class="alert alert-danger" role="alert">    -->
+
+                <p class="intro-subtitle headertext alert-top-error">
+                    <%=error%>
+                </p>
+                <!-- </div>  -->
+            </div>
+            <% } %>
