@@ -105,6 +105,8 @@ var personSchema = new mongoose.Schema({
   phone: String,
   location: String,
   date: Date,
+  height: String,
+  complexion: String,
   gender: String,
   username: String
 });
@@ -399,8 +401,8 @@ function checkOwner(req, res, next) {
 // 
 const credentials = {
 
-  apiKey: process.env.API_KEY,
-  username: process.env.USERNAME
+  apiKey: "41c6992c93c6ef898d95d5b07b8fbacccd14bb1e1bc541036ff4a2e7dbb8ebec",
+  username: "sandbox"
 
 };
 
@@ -458,6 +460,20 @@ app.set('views', path.join(__dirname, 'views'));
 app.get("/report", function (req, res) {
   res.render("report");
 });
+app.get("/admin", function (req, res) {
+  res.render("admin");
+});
+
+app.get('/users.ejs', isLoggedIn, async (req, res) => {
+  try {
+    const users = await User.find({}, 'username');
+    res.render('users', { users });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 // app.listen(process.env.PORT, process.env.IP, () => {
 //   console.log("started");
 // });
