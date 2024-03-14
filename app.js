@@ -107,6 +107,9 @@ var personSchema = new mongoose.Schema({
   date: Date,
   height: String,
   complexion: String,
+  hair: String,
+  color: String,
+  clothing: String,
   gender: String,
   username: String
 });
@@ -245,6 +248,11 @@ app.post("/person", isLoggedIn, photoC, upload.single("files"), (req, res) => {
     phone: req.body.phone,
     location: req.body.location,
     date: req.body.date,
+    height: req.body.height,
+    complexion: req.body.complexion,
+    hair: req.body.hair,
+    color: req.body.color,
+    clothing: req.body.clothing,
     gender: req.body.gender,
     username: req.user.username
   };
@@ -289,7 +297,9 @@ app.get("/person/:id", isLoggedIn, function (req, res) {
     if (err) {
       res.send(err);
     } else {
-      res.render("show.ejs", { person: person });
+      const { height, complexion, hair, eyecolor, clothing } = person;
+      // res.render("show.ejs", { person: person });
+      res.render("show.ejs", { person, height, complexion, hair, eyecolor, clothing })
     }
   });
 });
@@ -308,6 +318,11 @@ app.put("/person/:id", isLoggedIn, checkOwner, function (req, res) {
     phone: req.body.phone,
     location: req.body.location,
     date: req.body.date,
+    height: req.body.height,
+    complexion: req.body.complexion,
+    hair: req.body.hair,
+    color: req.body.color,
+    clothing: req.body.clothing,
     gender: req.body.gender,
     username: req.user.username
   };
@@ -460,19 +475,61 @@ app.set('views', path.join(__dirname, 'views'));
 app.get("/report", function (req, res) {
   res.render("report");
 });
-app.get("/admin", function (req, res) {
-  res.render("admin");
+
+app.get("/admin", async function (req, res) {
+  try {
+    const count = await Person.countDocuments({});
+    res.render('admin', { count });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+    // res.render("admin");
+  }
 });
 
-app.get('/users.ejs', isLoggedIn, async (req, res) => {
+// app.get('/users', isLoggedIn, async (req, res) => {
+//   try {
+//     const users = await User.find({}, 'username');
+//     res.render('users', { users });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).send('Internal Server Error');
+//   }
+// });
+
+app.get("/users.ejs", (req, res) => {
+  // Fetch user data from database (e.g., using Mongoose)
+  User.find({}, (err, users) => {
+    if (err) {
+      console.error(err);
+      // Handle error appropriately
+    } else {
+      // Render the template with the fetched users
+      res.render("users.ejs", { users });
+    }
+  });
+});
+
+app.get('/missing', isLoggedIn, async (req, res) => {
   try {
-    const users = await User.find({}, 'username');
-    res.render('users', { users });
+    const persons = await Person.find({}, 'firstname lastname address age phone location date height complexion hair color clothing gender username');
+    const count = await Person.countDocuments({});
+    res.render('missing', { persons, count });
   } catch (err) {
     console.error(err);
     res.status(500).send('Internal Server Error');
   }
 });
+// app.get("/missing", isLoggedIn, async function (req, res) {
+//   try {
+//     const count = await Person.countDocuments({});
+//     res.render("missing", { count: count });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send("Internal Server Error");
+//   }
+// });
+
 
 // app.listen(process.env.PORT, process.env.IP, () => {
 //   console.log("started");
