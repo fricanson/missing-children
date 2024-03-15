@@ -497,18 +497,33 @@ app.get("/admin", async function (req, res) {
 //   }
 // });
 
-app.get("/users.ejs", (req, res) => {
-  // Fetch user data from database (e.g., using Mongoose)
-  User.find({}, (err, users) => {
-    if (err) {
-      console.error(err);
-      // Handle error appropriately
-    } else {
-      // Render the template with the fetched users
-      res.render("users.ejs", { users });
-    }
-  });
+
+app.get("/users.ejs", async (req, res) => {
+  try {
+    const users = await User.find({});
+    const count = await User.countDocuments({});
+    res.render("users", { users, count });
+  } catch (err) {
+    console.error(err);
+    // Handle error appropriately
+    res.status(500).send('Internal Server Error');
+  }
 });
+
+
+
+// app.get("/users.ejs", (req, res) => {
+//   // Fetch user data from database (e.g., using Mongoose)
+//   User.find({}, (err, users) => {
+//     if (err) {
+//       console.error(err);
+//       // Handle error appropriately
+//     } else {
+//       // Render the template with the fetched users
+//       res.render("users.ejs", { users });
+//     }
+//   });
+// });
 
 app.get('/missing', isLoggedIn, async (req, res) => {
   try {
