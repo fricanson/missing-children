@@ -1,0 +1,49 @@
+<% include header.ejs %>
+    <% include nav.ejs %>
+
+        <div id="home" class="intro route bg-image">
+            <div class="container">
+                <div style="margin-top:70px">
+                    <p class="intro-subtitle headertext">All Recovered Children </p>
+                    <div class="dropdown dropright headertext-button" id="headerbuttonid">
+                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+                            Sort
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="/recovered?sort=firstname&order=1">Firstname Ascending</a>
+                            <a class="dropdown-item" href="/recovered?sort=firstname&order=-1">Firstname Descending</a>
+                            <a class="dropdown-item" href="/recovered?sort=lastname&order=1">Lastname Ascending</a>
+                            <a class="dropdown-item" href="/recovered?sort=lastname&order=-1">Lastname Descending</a>
+                            <a class="dropdown-item" href="/recovered?sort=date&order=1">Date Ascending</a>
+                            <a class="dropdown-item" href="/recovered?sort=date&order=-1">Date Descending</a>
+                        </div>
+                    </div>
+                    <div style="clear:both"></div>
+                    <div class="row">
+                        <% person.forEach(function(recovered){ %>
+                            <div class="col-lg-3 col-md-4  col-sm-6">
+                                <div class="img-thumbnail showdiv">
+                                    <a href="/person/<%=recovered._id%>">
+                                        <img src="/image/<%= recovered.filename %>">
+                                        <p>
+                                            <%= person.firstname+" "+person.lastname %></p>
+            </a>
+          </div>
+        </div>
+        <% }); %>
+        <div class=" col-lg-3 col-md-4 col-sm-6">
+                                                <div class="img-thumbnail showdiv">
+                                                    <a href="/recovered/new">
+                                                        <img id="addnewimg" src="/img/addperson.png">
+                                                        <p>Add recovered child</p>
+                                                    </a>
+
+                                                </div>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <% include footer.ejs %>

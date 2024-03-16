@@ -116,12 +116,27 @@ var personSchema = new mongoose.Schema({
 
 var Person = mongoose.model("Person", personSchema);
 
+
 var UserSchema = mongoose.Schema({
   username: String,
-  password: String
+  password: String,
+  role: { type: String, enum: ['user', 'admin'], default: 'user' }
 });
 UserSchema.plugin(passportLocalMongoose);
 var User = mongoose.model("User", UserSchema);
+
+var recoveredSchema = new mongoose.Schema({
+  filename: String,
+  firstname: String,
+  lastname: String,
+  phone: String,
+  location: String,
+  condition: String,
+  date: { type: Date, default: Date.now },
+  // Add any other fields you need
+});
+
+var Recovered = mongoose.model("Recovered", recoveredSchema);
 
 //authentication
 app.use(passport.initialize());
@@ -187,8 +202,41 @@ app.get("/person/new", isLoggedIn, function (req, res) {
   res.render("new.ejs");
 });
 
+app.get("/admin/create", function (req, res) {
+  // Check if there are any users in the database
+  User.countDocuments({}, function (err, count) {
+    if (err) {
+      console.error(err);
+      // Handle error appropriately
+      res.status(500).send('Internal Server Error');
+    } else {
+      // If there are no users in the database, create an admin user
+      if (count === 0) {
+        // Create a new admin user
+        var newAdmin = new User({ username: "admin", role: "admin" });
+        // Register the admin user with a default password
+        User.register(newAdmin, req.body.password, function (err, user) {
+          if (err) {
+            console.error(err);
+            // Handle error appropriately
+            res.status(500).send('Internal Server Error');
+          } else {
+            // Log a success message
+            console.log("Admin user seeded successfully.");
+            res.send("Admin user seeded successfully.");
+          }
+        });
+      } else {
+        // If there are already users in the database, inform that admin user is not needed
+        res.send("Admin user already exists. No need to seed.");
+      }
+    }
+  });
+});
+
+
 app.post("/register", function (req, res) {
-  var newUser = new User({ username: req.body.username }); // Note password NOT in new User
+  var newUser = new User({ username: req.body.username, role: "user" }); // Note password NOT in new User
   User.register(newUser, req.body.password, function (err, user) {
     if (err) {
       console.log(err);
@@ -304,6 +352,27 @@ app.get("/person/:id", isLoggedIn, function (req, res) {
   });
 });
 
+// const mongoose = require('mongoose');
+
+// Update the route to handle invalid ObjectId gracefully
+// app.get("/person/:id", isLoggedIn, function (req, res) {
+//   if (!mongoose.isValidObjectId(req.params.id)) {
+//     // Handle invalid ObjectId gracefully
+//     return res.status(400).send("Invalid ID");
+//   }
+
+//   Person.findById(req.params.id, function (err, person) {
+//     if (err) {
+//       return res.status(500).send(err.message); // Handle MongoDB error
+//     }
+//     if (!person) {
+//       return res.status(404).send("Person not found"); // Handle not found error
+//     }
+//     // Handle the found person
+//     res.render("show.ejs", { person: person });
+//   });
+// });
+
 app.put("/person/:id", isLoggedIn, checkOwner, function (req, res) {
   console.log("----req.body----");
   console.log(req.body);
@@ -413,6 +482,22 @@ function checkOwner(req, res, next) {
     }
   });
 }
+//Recoveries
+app.get("/recovered", isLoggedIn, function (req, res) {
+  Recovered.find({}, function (err, recovered) {
+    if (err) {
+      console.log(err);
+    } else {
+      res.render("recoveries.ejs", { recovered: recovered });
+    }
+  });
+});
+
+// Show form to add a new recovered child
+app.get("/recovered/new", isLoggedIn, function (req, res) {
+  res.render("recovered.ejs");
+});
+
 // 
 const credentials = {
 

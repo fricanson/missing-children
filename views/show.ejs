@@ -47,18 +47,26 @@
             <p>Registered By: <%= person.username %>
             </p>
 
-            <form action="/person/<%= person._id %>/edit" class="delete-form" method="get">
 
-                <button class="btn homebutton delete-button" type="submit">Edit</button>
-
-            </form>
             <!-- 
 <div class="delete-form">
     <a href="/person/<%= person._id %>/edit"class="btn homebutton delete-button">Edit</a>
 </div> -->
-            <form action="/person/<%= person.files_id %>?_method=DELETE" class="delete-form" method="POST">
-                <button class="btn homebutton delete-button" type="submit">Delete</button>
-            </form>
+
+
+            <% if ( currentUser && currentUser.role==='admin' ) { %>
+                <form action="/person/<%= person.files_id %>?_method=DELETE" class="delete-form" method="POST">
+                    <button class="btn homebutton delete-button" type="submit">Delete</button>
+                </form>
+                <% } else { %>
+                    <form action="/person/<%= person._id %>/edit" class="delete-form" method="get">
+
+                        <button class="btn homebutton delete-button" type="submit">Edit</button>
+
+                    </form>
+                    <%}%>
+
+
 
         </div>
         <!-- <%= person.username %> -->

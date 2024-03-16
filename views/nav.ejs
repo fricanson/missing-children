@@ -26,17 +26,24 @@
                         <li class="nav-item">
                             <a class="nav-link js-scroll" href="/logout">Logout</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link js-scroll" href="/recovered">Recoveries</a>
+                        </li>
                         <% }%>
                             <!-- Report form in the navigation bar -->
-                            <li class="nav-item">
-                                <a class="nav-link js-scroll" href="/report">Write Report</a>
-                                <!-- nav.ejs -->
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link js-scroll" href="/admin">Admin</a>
-                                <!-- nav.ejs -->
-                            </li>
-                            <!-- End of Report form -->
+                            <% if (currentUser && currentUser.role==='admin' ) { %>
+                                <li class="nav-item">
+                                    <a class="nav-link js-scroll" href="/admin">Admin</a>
+                                </li>
+                                <% } else { %>
+                                    <li class="nav-item">
+                                        <a class="nav-link js-scroll" href="/report">Write Report</a>
+                                        <!-- nav.ejs -->
+                                    </li>
+
+
+                                    <%}%>
+                                        <!-- End of Report form -->
             </ul>
         </div>
     </div>
