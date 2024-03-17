@@ -1,99 +1,45 @@
 <% include header.ejs %>
-
     <% include nav.ejs %>
 
-        <div class="container formdiv">
-            <h1>Add Recovered Child</h1>
-            <form action="/recoveries" method="POST" enctype="multipart/form-data" onsubmit=" return ValidateFileUpload()">
-                <output id="list"></output>
-                <p>Photo</p>
-                <div class="custom-file form-group">
-                    <input type="file" class="custom-file-input" id="files" name="files" accept="image/*" required>
-                    <label class="custom-file-label" for="files">Choose Photo</label>
-                </div>
-                <!-- <div class="custom-file form-group">
-            <input type="file" class="custom-file-input" id="customFile" name="photo" accept="image/*" required>
-            <label class="custom-file-label" for="customFile">Choose Photo</label>
-        </div>  -->
-                <!-- <input type="file" id="files" name="files" multiple /> -->
-
-                <br><br>
-
-                <div class="row">
-                    <div class="col">
-                        <div class="form-group">
-                            <label for="firstname">Firstname</label>
-                            <input type="text" name="firstname" id="firstname" class="form-control"
-                                placeholder="Firstname" maxlength="20" required>
+        <div id="home" class="intro route bg-image">
+            <div class="container">
+                <div style="margin-top:70px">
+                    <p class="intro-subtitle headertext">All Recovered Children </p>
+                    <div class="dropdown dropright headertext-button" id="headerbuttonid">
+                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+                            Sort
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="/recovery?sort=firstname&order=1">Firstname Ascending</a>
+                            <a class="dropdown-item" href="/recovery?sort=firstname&order=-1">Firstname Descending</a>
+                            <a class="dropdown-item" href="/recovery?sort=lastname&order=1">Lastname Ascending</a>
+                            <a class="dropdown-item" href="/recovery?sort=lastname&order=-1">Lastname Descending</a>
                         </div>
                     </div>
-                    <div class="col">
-                        <div class="form-group">
-                            <label for="lastname">Lastname</label>
-                            <input type="text" name="lastname" id="lastname" class="form-control" placeholder="Lastname"
-                                maxlength="20" required>
-                        </div>
+                    <div style="clear:both"></div>
+                    <div class="row">
+                        <% recovered.forEach(function(recovery){ %>
+                            <div class="col-lg-3 col-md-4 col-sm-6">
+                                <div class="img-thumbnail showdiv">
+                                    <a href="/recovery/<%=recovery._id%>">
+                                        <img src="/image/<%= recovery.filename %>">
+                                        <p>
+                                            <%= recovery.firstname+" "+recovery.lastname %></p>
+                        </a>
                     </div>
                 </div>
+                <% }); %>
+                <div class=" col-lg-3 col-md-4 col-sm-6">
+                                                <div class="img-thumbnail showdiv">
+                                                    <a href="/recovery/new">
+                                                        <img id="addnewimg" src="/img/addperson.png">
+                                                        <p>Add Recovered Child</p>
+                                                    </a>
+                                                </div>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
 
-                <div class="form-group">
-                    <label for="phone">Contact-info(reporter)</label>
-                    <input type="text" name="phone" id="phone" class="form-control" placeholder="Phone Number"
-                        maxlength="20">
-                </div>
-                <div class="form-group">
-                    <label for="location">Location recovered from</label>
-                    <input type="text" name="location" id="location" class="form-control" placeholder="Location"
-                        maxlength="20">
-                </div>
-                <div class="form-group">
-                    <label fors="condition">condition of child</label>
-                    <select name="condition" id="condition" class="form-control">
-                        <option value="safe">Safe</option>
-                        <option value="injured">Injured</option>
-                        <option value="unharmed">Unharmed</option>
-                    </select>
-                </div>
-                <div class="delete-form">
-                    <button class="btn homebutton delete-button" type="submit">Submit</button>
-                </div>
-
-            </form>
-        </div>
-        <script>
-            function handleFileSelect(evt) {
-              var files = evt.target.files; // FileList object
-          
-              // Loop through the FileList and render image files as thumbnails.
-              for (var i = 0, f; f = files[i]; i++) {
-          
-                // Only process image files.
-                if (!f.type.match('image.*')) {
-                  continue;
-                }
-          
-                var reader = new FileReader();
-          
-                // Closure to capture the file information.
-                reader.onload = (function(theFile) {
-                  return function(e) {
-                    // Render thumbnail.
-                    var span = document.createElement('span');
-                    span.innerHTML = ['<img class="formdiv-img" src="', e.target.result,
-                                      '" title="', escape(theFile.name), '"/>'].join('');
-                    document.getElementById('list').insertBefore(span, null);
-                  };
-                })(f);
-          
-                // Read in the image file as a data URL.
-                reader.readAsDataURL(f);
-              }
-            }
-          
-            document.getElementById('files').addEventListener('change', handleFileSelect, false);
-    
-            ///////////////////////////////
-       
-            ////////////////////////////////
-          </script>
-        <% include footer.ejs %>
+            <% include footer.ejs %>

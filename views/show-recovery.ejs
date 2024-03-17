@@ -1,0 +1,27 @@
+<% include header.ejs %>
+    <% include nav.ejs %>
+
+        <div class="container formdiv">
+            <img class="formdiv-img" src="/image/<%= recovery.filename %>" alt="" width="300px">
+            <hr>
+            <p>Firstname: <%= recovery.firstname %>
+            </p>
+            <p>Lastname: <%= recovery.lastname %>
+            </p>
+            <p>Phone Number: <%= recovery.phone %>
+            </p>
+            <p>Location recovered from: <%= recovery.location %>
+            </p>
+            <p>Condition: <%= recovery.condition %>
+            </p>
+            <p>Registered By: <%= recovery.username %>
+            </p>
+
+            <% if (currentUser && currentUser.role==='admin' ) { %>
+                <form action="/recovery/<%= recovery.files_id %>?_method=DELETE" class="delete-form" method="POST">
+                    <button class="btn homebutton delete-button" type="submit">Delete</button>
+                </form>
+                <% } %>
+        </div>
+
+        <% include footer.ejs %>

@@ -125,18 +125,31 @@ var UserSchema = mongoose.Schema({
 UserSchema.plugin(passportLocalMongoose);
 var User = mongoose.model("User", UserSchema);
 
-var recoveredSchema = new mongoose.Schema({
-  filename: String,
+// var recoveredSchema = new mongoose.Schema({
+//   filename: String,
+//   firstname: String,
+//   lastname: String,
+//   phone: String,
+//   location: String,
+//   condition: String,
+//   date: { type: Date, default: Date.now },
+//   // Add any other fields you need
+// });
+
+// var Recovered = mongoose.model("Recovered", recoveredSchema);
+
+const recoverySchema = new mongoose.Schema({
   firstname: String,
   lastname: String,
   phone: String,
   location: String,
   condition: String,
-  date: { type: Date, default: Date.now },
-  // Add any other fields you need
+  username: String,
+  files_id: String,
+  filename: String
 });
 
-var Recovered = mongoose.model("Recovered", recoveredSchema);
+const Recovery = mongoose.model('Recovery', recoverySchema);
 
 //authentication
 app.use(passport.initialize());
@@ -483,19 +496,71 @@ function checkOwner(req, res, next) {
   });
 }
 //Recoveries
-app.get("/recovered", isLoggedIn, function (req, res) {
-  Recovered.find({}, function (err, recovered) {
-    if (err) {
-      console.log(err);
-    } else {
-      res.render("recoveries.ejs", { recovered: recovered });
-    }
-  });
+// Render recoveries.ejs
+app.get('/recovery/new', isLoggedIn, (req, res) => {
+  res.render('recoveries');
 });
 
-// Show form to add a new recovered child
-app.get("/recovered/new", isLoggedIn, function (req, res) {
-  res.render("recovered.ejs");
+// Render recovered.ejs with all recovered children
+app.get('/recovery', async (req, res) => {
+  const sortField = req.query.sort || 'firstname';
+  const sortOrder = req.query.order === '1' ? 1 : -1;
+
+  const recoveredChildren = await Recovery.find().sort({ [sortField]: sortOrder });
+  res.render('recovered', { recovered: recoveredChildren });
+});
+
+// Render show-recovery.ejs for a specific recovered child
+// app.get('/recovery/:id', async (req, res) => {
+//   const recovery = await Recovery.findById(req.params.id);
+//   res.render('show-recovery', { recovery, currentUser: req.user });
+// });
+app.get('/recovery/:id', async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.isValidObjectId(id)) {
+    // Handle invalid ObjectId gracefully
+    return res.status(400).send('Invalid ID');
+  }
+
+  try {
+    const recovery = await Recovery.findById(id);
+
+    if (!recovery) {
+      return res.status(404).send('Recovery not found');
+    }
+
+    res.render('show-recovery', { recovery, currentUser: req.user });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+// Handle new recovered child submission
+app.post('/recovery', isLoggedIn, upload.single('files'), async (req, res) => {
+  const { firstname, lastname, phone, location, condition } = req.body;
+  const { filename, id } = req.file;
+  const recovery = new Recovery({
+    firstname,
+    lastname,
+    phone,
+    location,
+    condition,
+    username: req.user.username,
+    files_id: id,
+    filename
+  });
+
+  await recovery.save();
+  res.redirect('/recovery');
+});
+
+// Handle deletion of a recovered child
+app.delete('/recovery/:id', isLoggedIn, async (req, res) => {
+  const { id } = req.params;
+  await Recovery.findByIdAndDelete(id);
+  res.redirect('/recovery');
 });
 
 // 
