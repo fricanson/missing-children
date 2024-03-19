@@ -622,7 +622,7 @@ app.post('/report', async (req, res) => {
 });
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
-app.get("/report", function (req, res) {
+app.get("/report", isLoggedIn, function (req, res) {
   res.render("report");
 });
 
@@ -685,6 +685,24 @@ app.get('/missing', isLoggedIn, async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+
+app.get('/found', async (req, res) => {
+  const recoveries = await Recovery.find();
+  res.render('found', { recoveries });
+});
+
+// app.get("/report", isLoggedIn, async (req, res) => {
+//   try {
+//     const userCount = await User.countDocuments({});
+//     const reportCount = await Person.countDocuments({});
+//     const recoveredCount = await Recovery.countDocuments({});
+
+//     res.render("report", { userCount, reportCount, recoveredCount });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).send('Internal Server Error');
+//   }
+// });
 // app.get("/missing", isLoggedIn, async function (req, res) {
 //   try {
 //     const count = await Person.countDocuments({});

@@ -1,0 +1,44 @@
+<% include header.ejs %>
+    <% include nav.ejs %>
+
+        <div class="container">
+            <h1>Recovered Children</h1>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Phone</th>
+                        <th>Location Recovered</th>
+                        <th>Condition</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% recoveries.forEach((recovery, index)=> { %>
+                        <tr>
+                            <td>
+                                <%= index + 1 %>
+                            </td>
+                            <td>
+                                <%= recovery.firstname %>
+                            </td>
+                            <td>
+                                <%= recovery.lastname %>
+                            </td>
+                            <td>
+                                <%= recovery.phone %>
+                            </td>
+                            <td>
+                                <%= recovery.location %>
+                            </td>
+                            <td>
+                                <%= recovery.condition %>
+                            </td>
+                        </tr>
+                        <% }) %>
+                </tbody>
+            </table>
+        </div>
+
+        <% include footer.ejs %>
